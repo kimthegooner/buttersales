@@ -1,0 +1,142 @@
+{
+  "activities": [
+    {
+      "id": "act-001",
+      "type": "call",
+      "title": "초기 니즈 파악 전화",
+      "description": "팝업 빌더 사용 경험 및 현재 마케팅 도구 확인. 기존 툴 불만사항 파악.",
+      "dealId": "seed-001",
+      "date": "2026-02-14T10:00:00+09:00",
+      "duration": 15,
+      "completed": true,
+      "createdAt": "2026-02-14T10:15:00+09:00",
+      "updatedAt": "2026-02-14T10:15:00+09:00"
+    },
+    {
+      "id": "act-002",
+      "type": "email",
+      "title": "제품 소개 자료 발송",
+      "description": "코드앤버터 팝업 빌더 소개 PDF 및 사례 발송",
+      "dealId": "seed-001",
+      "date": "2026-02-14T14:00:00+09:00",
+      "completed": true,
+      "createdAt": "2026-02-14T14:00:00+09:00",
+      "updatedAt": "2026-02-14T14:00:00+09:00"
+    },
+    {
+      "id": "act-003",
+      "type": "meeting",
+      "title": "데모 미팅",
+      "description": "줌으로 30분 데모 진행. 팝업 빌더 주요 기능 시연.",
+      "dealId": "seed-002",
+      "date": "2026-02-16T14:00:00+09:00",
+      "duration": 30,
+      "completed": true,
+      "createdAt": "2026-02-16T15:00:00+09:00",
+      "updatedAt": "2026-02-16T15:00:00+09:00"
+    },
+    {
+      "id": "act-004",
+      "type": "proposal",
+      "title": "프로 플랜 맞춤 제안서 발송",
+      "description": "패션플러스 맞춤 가격 및 기능 제안서 작성하여 발송",
+      "dealId": "seed-002",
+      "date": "2026-02-17T11:00:00+09:00",
+      "completed": true,
+      "createdAt": "2026-02-17T11:00:00+09:00",
+      "updatedAt": "2026-02-17T11:00:00+09:00"
+    },
+    {
+      "id": "act-005",
+      "type": "note",
+      "title": "헬스케어몰 관심사 메모",
+      "description": "건강식품 카테고리 팝업 특화 기능에 관심. 가격 부담 언급.",
+      "dealId": "seed-003",
+      "date": "2026-02-10T14:30:00+09:00",
+      "completed": true,
+      "createdAt": "2026-02-10T14:30:00+09:00",
+      "updatedAt": "2026-02-10T14:30:00+09:00"
+    },
+    {
+      "id": "act-006",
+      "type": "call",
+      "title": "뷰티샵 CMO 팔로업 전화",
+      "description": "제안서 검토 후 추가 질문 응대. IT팀 승인 대기 중.",
+      "dealId": "seed-004",
+      "date": "2026-02-18T09:30:00+09:00",
+      "duration": 20,
+      "completed": true,
+      "createdAt": "2026-02-18T09:50:00+09:00",
+      "updatedAt": "2026-02-18T09:50:00+09:00"
+    },
+    {
+      "id": "act-007",
+      "type": "email",
+      "title": "트래블넷 소개 이메일",
+      "description": "여행 업종 사례 포함한 소개 이메일 발송",
+      "dealId": "seed-005",
+      "date": "2026-02-12T16:00:00+09:00",
+      "completed": true,
+      "createdAt": "2026-02-12T16:00:00+09:00",
+      "updatedAt": "2026-02-12T16:00:00+09:00"
+    },
+    {
+      "id": "act-008",
+      "type": "meeting",
+      "title": "메가마트 엔터프라이즈 미팅",
+      "description": "대면 미팅. 디지털전환 팀장 + IT팀 담당자 참석. 보안 요건 논의.",
+      "dealId": "seed-006",
+      "date": "2026-02-19T14:00:00+09:00",
+      "duration": 60,
+      "completed": false,
+      "createdAt": "2026-02-18T10:00:00+09:00",
+      "updatedAt": "2026-02-18T10:00:00+09:00"
+    },
+    {
+      "id": "act-009",
+      "type": "call",
+      "title": "푸드딜리 데모 일정 조율",
+      "description": "다음 주 화요일 데모 확정",
+      "dealId": "seed-008",
+      "date": "2026-02-19T11:00:00+09:00",
+      "duration": 10,
+      "completed": false,
+      "createdAt": "2026-02-19T11:10:00+09:00",
+      "updatedAt": "2026-02-19T11:10:00+09:00"
+    },
+    {
+      "id": "act-010",
+      "type": "proposal",
+      "title": "스포츠기어 비지니스 플랜 제안",
+      "description": "이사와 통화 후 비지니스 플랜 맞춤 제안서 준비",
+      "dealId": "seed-009",
+      "date": "2026-02-20T10:00:00+09:00",
+      "completed": false,
+      "createdAt": "2026-02-19T09:00:00+09:00",
+      "updatedAt": "2026-02-19T09:00:00+09:00"
+    },
+    {
+      "id": "act-011",
+      "type": "custom",
+      "customType": "SNS 리서치",
+      "title": "키즈플레이 인스타그램 분석",
+      "description": "키즈플레이 인스타그램 마케팅 현황 분석. 팝업 활용 포인트 정리.",
+      "dealId": "seed-007",
+      "date": "2026-02-11T15:00:00+09:00",
+      "completed": true,
+      "createdAt": "2026-02-11T15:00:00+09:00",
+      "updatedAt": "2026-02-11T15:00:00+09:00"
+    },
+    {
+      "id": "act-012",
+      "type": "note",
+      "title": "리빙데코 재컨택 메모",
+      "description": "3개월 후(5월) 재컨택 예정. 가격 인하 또는 프로모션 시 우선 연락.",
+      "dealId": "seed-010",
+      "date": "2026-02-05T14:00:00+09:00",
+      "completed": true,
+      "createdAt": "2026-02-05T14:00:00+09:00",
+      "updatedAt": "2026-02-05T14:00:00+09:00"
+    }
+  ]
+}

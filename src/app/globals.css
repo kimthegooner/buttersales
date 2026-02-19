@@ -1,0 +1,29 @@
+@import "tailwindcss";
+
+:root {
+  --primary: #7e22ce;
+  --primary-light: #a855f7;
+  --bg-dark: #0f0a1a;
+  --bg-card: #1a1128;
+  --bg-card-hover: #231738;
+  --text-primary: #f3e8ff;
+  --text-secondary: #a78bbc;
+  --border: #2d1f42;
+  --accent-green: #22c55e;
+  --accent-red: #ef4444;
+  --accent-yellow: #eab308;
+  --accent-blue: #3b82f6;
+  --accent-cyan: #06b6d4;
+}
+
+body {
+  background: var(--bg-dark);
+  color: var(--text-primary);
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+}
+
+/* Scrollbar */
+::-webkit-scrollbar { width: 6px; height: 6px; }
+::-webkit-scrollbar-track { background: var(--bg-dark); }
+::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
+::-webkit-scrollbar-thumb:hover { background: var(--primary); }
