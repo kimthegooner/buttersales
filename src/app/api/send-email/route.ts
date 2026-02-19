@@ -28,17 +28,18 @@ export async function POST(req: NextRequest) {
     const isVerifiedFrom = verifiedDomain && from && from.endsWith(`@${verifiedDomain}`)
     const senderEmail = isVerifiedFrom ? from : '코드앤버터 CRM <onboarding@resend.dev>'
 
-    const emailPayload: Record<string, unknown> = {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const emailOptions: any = {
       from: senderEmail,
       to: [to],
       subject,
       text: body,
     }
     if (!isVerifiedFrom && from) {
-      emailPayload.reply_to = from
+      emailOptions.reply_to = from
     }
 
-    const { data, error } = await resend.emails.send(emailPayload as Parameters<typeof resend.emails.send>[0])
+    const { data, error } = await resend.emails.send(emailOptions)
 
     if (error) {
       return NextResponse.json(
