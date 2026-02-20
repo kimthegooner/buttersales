@@ -1,19 +1,23 @@
-import { Resend } from 'resend'
+import nodemailer from 'nodemailer'
 import { NextRequest, NextResponse } from 'next/server'
 
+// Zoho SMTP 서버 설정 — Vercel serverless에서 DNS EBUSY 우회를 위해 IP 직접 사용
+const ZOHO_SMTP_IP = '136.143.182.56'  // smtp.zoho.com resolved IP
+const ZOHO_SMTP_SERVERNAME = 'smtp.zoho.com'  // TLS 인증서 검증용
+
 export async function POST(req: NextRequest) {
-  const apiKey = process.env.RESEND_API_KEY
-  if (!apiKey || apiKey === 're_your_api_key_here') {
+  const zohoEmail = process.env.ZOHO_EMAIL
+  const zohoPassword = process.env.ZOHO_APP_PASSWORD
+
+  if (!zohoEmail || !zohoPassword) {
     return NextResponse.json(
-      { success: false, error: 'Resend API 키가 설정되지 않았습니다. .env.local 파일을 확인하세요.' },
+      { success: false, error: 'Zoho 이메일 설정이 되어있지 않습니다. .env.local 파일을 확인하세요.' },
       { status: 500 }
     )
   }
 
-  const resend = new Resend(apiKey)
-
   try {
-    const { to, subject, body, from } = await req.json()
+    const { to, subject, body } = await req.json()
 
     if (!to || !subject || !body) {
       return NextResponse.json(
@@ -22,36 +26,35 @@ export async function POST(req: NextRequest) {
       )
     }
 
-    // 도메인 인증 전에는 onboarding@resend.dev만 발신자로 사용 가능
-    // 인증된 도메인 이메일이면 그대로 사용, 아니면 onboarding@resend.dev 사용 + reply-to 설정
-    const verifiedDomain = process.env.RESEND_VERIFIED_DOMAIN || ''
-    const isVerifiedFrom = verifiedDomain && from && from.endsWith(`@${verifiedDomain}`)
-    const senderEmail = isVerifiedFrom ? from : '코드앤버터 CRM <onboarding@resend.dev>'
+    const transporter = nodemailer.createTransport({
+      host: ZOHO_SMTP_IP,
+      port: 465,
+      secure: true,
+      auth: {
+        user: zohoEmail,
+        pass: zohoPassword,
+      },
+      tls: {
+        servername: ZOHO_SMTP_SERVERNAME,
+        rejectUnauthorized: true,
+      },
+      connectionTimeout: 10000,
+      greetingTimeout: 10000,
+      socketTimeout: 15000,
+    })
 
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const emailOptions: any = {
-      from: senderEmail,
-      to: [to],
+    const info = await transporter.sendMail({
+      from: `코드앤버터 CRM <${zohoEmail}>`,
+      to,
       subject,
       text: body,
-    }
-    if (!isVerifiedFrom && from) {
-      emailOptions.reply_to = from
-    }
+    })
 
-    const { data, error } = await resend.emails.send(emailOptions)
-
-    if (error) {
-      return NextResponse.json(
-        { success: false, error: error.message },
-        { status: 400 }
-      )
-    }
-
-    return NextResponse.json({ success: true, id: data?.id })
+    return NextResponse.json({ success: true, id: info.messageId })
   } catch (err) {
+    console.error('Email send error:', err)
     return NextResponse.json(
-      { success: false, error: '이메일 발송 중 오류가 발생했습니다.' },
+      { success: false, error: `이메일 발송 중 오류가 발생했습니다: ${String(err)}` },
       { status: 500 }
     )
   }

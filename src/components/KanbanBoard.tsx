@@ -13,6 +13,7 @@ interface KanbanBoardProps {
   onAddDeal: (stage: StageConfig) => void
   onAddStage: (stage: StageConfig) => void
   onRemoveStage: (stageId: string) => void
+  onUpdateStage?: (stageId: string, updates: Partial<StageConfig>) => void
 }
 
 export default function KanbanBoard({
@@ -23,6 +24,7 @@ export default function KanbanBoard({
   onAddDeal,
   onAddStage,
   onRemoveStage,
+  onUpdateStage,
 }: KanbanBoardProps) {
   const [showAddStage, setShowAddStage] = useState(false)
   const [newStageName, setNewStageName] = useState('')
@@ -58,6 +60,7 @@ export default function KanbanBoard({
               onDealClick={onDealClick}
               onAddDeal={onAddDeal}
               onRemoveStage={stages.length > 1 ? onRemoveStage : undefined}
+              onUpdateStage={onUpdateStage}
             />
           )
         })}

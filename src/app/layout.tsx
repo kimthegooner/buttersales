@@ -1,4 +1,5 @@
 import type { Metadata } from 'next'
+import { Suspense } from 'react'
 import './globals.css'
 import Sidebar from '@/components/Sidebar'
 
@@ -15,9 +16,9 @@ export default function RootLayout({
   return (
     <html lang="ko">
       <body className="min-h-screen">
-        <header className="border-b border-[#2d1f42] bg-[#1a1128]/80 backdrop-blur-sm sticky top-0 z-50">
-          <div className="px-6 py-4 flex items-center justify-between">
-            <div className="flex items-center gap-3">
+        <header className="electron-drag border-b border-[#2d1f42] bg-[#1a1128]/80 backdrop-blur-sm sticky top-0 z-50">
+          <div className="pl-20 pr-6 py-4 flex items-center justify-between">
+            <div className="flex items-center gap-3 electron-no-drag">
               <div className="w-8 h-8 bg-gradient-to-br from-purple-500 to-purple-700 rounded-lg flex items-center justify-center text-white font-bold text-sm">
                 CB
               </div>
@@ -32,7 +33,9 @@ export default function RootLayout({
         </header>
 
         <div className="flex">
-          <Sidebar />
+          <Suspense fallback={<div className="w-56 shrink-0" />}>
+            <Sidebar />
+          </Suspense>
           <main className="flex-1 p-6 overflow-auto min-h-[calc(100vh-65px)]">
             {children}
           </main>

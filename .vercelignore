@@ -1,0 +1,5 @@
+dist-electron/
+electron/
+scripts/
+electron-builder.yml
+*.dmg

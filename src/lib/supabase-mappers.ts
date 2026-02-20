@@ -1,4 +1,4 @@
-import { Deal, Contact, Activity, Pipeline, EmailTemplate, EmailSettings } from './types'
+import { Deal, Contact, Activity, Pipeline, EmailTemplate, EmailSettings, DevNote, SiteAnalysis } from './types'
 
 // ─── Pipeline ───
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -167,4 +167,80 @@ export function dbToEmailSettings(row: any): EmailSettings {
   return {
     senderEmail: row?.sender_email || '',
   }
+}
+
+// ─── DevNote ───
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export function dbToDevNote(row: any): DevNote {
+  return {
+    id: row.id,
+    title: row.title,
+    date: row.date,
+    content: row.content || '',
+    tags: row.tags || [],
+    createdAt: row.created_at,
+    updatedAt: row.updated_at,
+  }
+}
+
+export function devNoteToDb(n: Partial<DevNote> & { id?: string }) {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const row: any = {}
+  if (n.id !== undefined) row.id = n.id
+  if (n.title !== undefined) row.title = n.title
+  if (n.date !== undefined) row.date = n.date
+  if (n.content !== undefined) row.content = n.content
+  if (n.tags !== undefined) row.tags = n.tags
+  if (n.createdAt !== undefined) row.created_at = n.createdAt
+  if (n.updatedAt !== undefined) row.updated_at = n.updatedAt
+  return row
+}
+
+// ─── SiteAnalysis ───
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export function dbToSiteAnalysis(row: any): SiteAnalysis {
+  return {
+    id: row.id,
+    url: row.url,
+    title: row.title || null,
+    description: row.description || null,
+    ogImage: row.og_image || null,
+    hasOgTags: row.has_og_tags || false,
+    mobileOptimized: row.mobile_optimized || false,
+    loadTimeMs: row.load_time_ms || undefined,
+    pageSize: row.page_size || undefined,
+    services: row.services || [],
+    webBuilders: row.web_builders || [],
+    salesScore: row.sales_score || 0,
+    opportunities: row.opportunities || [],
+    notes: row.notes || '',
+    status: row.status || 'done',
+    errorMessage: row.error_message || undefined,
+    createdAt: row.created_at,
+    updatedAt: row.updated_at,
+  }
+}
+
+export function siteAnalysisToDb(a: Partial<SiteAnalysis> & { id?: string }) {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const row: any = {}
+  if (a.id !== undefined) row.id = a.id
+  if (a.url !== undefined) row.url = a.url
+  if (a.title !== undefined) row.title = a.title
+  if (a.description !== undefined) row.description = a.description
+  if (a.ogImage !== undefined) row.og_image = a.ogImage
+  if (a.hasOgTags !== undefined) row.has_og_tags = a.hasOgTags
+  if (a.mobileOptimized !== undefined) row.mobile_optimized = a.mobileOptimized
+  if (a.loadTimeMs !== undefined) row.load_time_ms = a.loadTimeMs
+  if (a.pageSize !== undefined) row.page_size = a.pageSize
+  if (a.services !== undefined) row.services = a.services
+  if (a.webBuilders !== undefined) row.web_builders = a.webBuilders
+  if (a.salesScore !== undefined) row.sales_score = a.salesScore
+  if (a.opportunities !== undefined) row.opportunities = a.opportunities
+  if (a.notes !== undefined) row.notes = a.notes
+  if (a.status !== undefined) row.status = a.status
+  if (a.errorMessage !== undefined) row.error_message = a.errorMessage
+  if (a.createdAt !== undefined) row.created_at = a.createdAt
+  if (a.updatedAt !== undefined) row.updated_at = a.updatedAt
+  return row
 }

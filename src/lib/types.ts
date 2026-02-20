@@ -7,10 +7,30 @@ export const PLAN_OPTIONS: { id: PlanType; label: string; color: string }[] = [
   { id: 'business', label: '비지니스', color: 'bg-yellow-500' },
 ]
 
+export type AutomationActionType = 'send_email' | 'create_activity' | 'notify' | 'update_deal' | 'custom'
+
+export interface StageAutomation {
+  id: string
+  actionType: AutomationActionType
+  label: string
+  description?: string
+  enabled: boolean
+}
+
+export const AUTOMATION_ACTION_OPTIONS: { id: AutomationActionType; label: string; icon: string }[] = [
+  { id: 'send_email', label: '이메일 발송', icon: '📧' },
+  { id: 'create_activity', label: '활동 자동 생성', icon: '📋' },
+  { id: 'notify', label: '알림 보내기', icon: '🔔' },
+  { id: 'update_deal', label: '딜 정보 업데이트', icon: '✏️' },
+  { id: 'custom', label: '커스텀 액션', icon: '⚡' },
+]
+
 export interface StageConfig {
   id: string
   label: string
   color: string
+  description?: string
+  automations?: StageAutomation[]
 }
 
 export const STAGE_COLORS = [
@@ -150,3 +170,44 @@ export const EMAIL_TEMPLATE_VARIABLES: { variable: string; label: string }[] = [
   { variable: '{{플랜}}', label: '플랜' },
   { variable: '{{딜제목}}', label: '딜 제목' },
 ]
+
+// Site Analysis
+export interface SiteAnalysis {
+  id: string
+  url: string
+  title?: string | null
+  description?: string | null
+  ogImage?: string | null
+  hasOgTags: boolean
+  mobileOptimized: boolean
+  loadTimeMs?: number
+  pageSize?: number
+  services: SiteAnalysisService[]
+  webBuilders: string[]
+  salesScore: number
+  opportunities: string[]
+  notes: string
+  status: 'analyzing' | 'done' | 'error'
+  errorMessage?: string
+  createdAt: string
+  updatedAt: string
+}
+
+export interface SiteAnalysisService {
+  name: string
+  label: string
+  score: number
+  verdict: 'confirmed' | 'likely' | 'none'
+  matchedPatterns: string[]
+}
+
+// Dev Note
+export interface DevNote {
+  id: string
+  title: string
+  date: string
+  content: string
+  tags: string[]
+  createdAt: string
+  updatedAt: string
+}
