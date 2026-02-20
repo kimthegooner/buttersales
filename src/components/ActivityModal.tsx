@@ -3,7 +3,8 @@
 import { useState, useEffect } from 'react'
 import { Activity, ActivityType, Deal, EmailTemplate, ACTIVITY_TYPE_OPTIONS, getActivityLabel } from '@/lib/types'
 import { substituteVariables } from '@/lib/emailUtils'
-import { loadEmailSettings } from '@/lib/storage'
+import { EmailSettings } from '@/lib/types'
+import { apiGet } from '@/lib/api-client'
 
 interface ActivityModalProps {
   activity?: Activity | null
@@ -44,8 +45,9 @@ export default function ActivityModal({ activity, allDeals, defaultDealId, email
   const [senderEmail, setSenderEmail] = useState('')
 
   useEffect(() => {
-    const settings = loadEmailSettings()
-    setSenderEmail(settings.senderEmail)
+    apiGet<EmailSettings>('/api/email-settings')
+      .then((s) => setSenderEmail(s.senderEmail))
+      .catch(console.error)
   }, [])
 
   // Deal search

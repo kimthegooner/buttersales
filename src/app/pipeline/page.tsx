@@ -4,7 +4,7 @@ import { useState, useEffect } from 'react'
 import { Deal, Contact, EmailTemplate, StageConfig } from '@/lib/types'
 import { useDeals } from '@/hooks/useDeals'
 import { useActivities } from '@/hooks/useActivities'
-import { loadContacts, loadEmailTemplates } from '@/lib/storage'
+import { apiGet } from '@/lib/api-client'
 import PipelineSummary from '@/components/PipelineSummary'
 import KanbanBoard from '@/components/KanbanBoard'
 import DealModal from '@/components/DealModal'
@@ -43,24 +43,8 @@ export default function PipelinePage() {
   const [allContacts, setAllContacts] = useState<Contact[]>([])
   const [emailTemplates, setEmailTemplates] = useState<EmailTemplate[]>([])
   useEffect(() => {
-    const stored = loadContacts()
-    if (stored.length > 0) {
-      setAllContacts(stored)
-    } else {
-      fetch('/data/contacts.json')
-        .then((r) => r.json())
-        .then((data) => setAllContacts(data.contacts || []))
-        .catch(() => {})
-    }
-    const storedTpl = loadEmailTemplates()
-    if (storedTpl.length > 0) {
-      setEmailTemplates(storedTpl)
-    } else {
-      fetch('/data/email-templates.json')
-        .then((r) => r.json())
-        .then((data) => setEmailTemplates(data.templates || []))
-        .catch(() => {})
-    }
+    apiGet<Contact[]>('/api/contacts').then(setAllContacts).catch(console.error)
+    apiGet<EmailTemplate[]>('/api/email-templates').then(setEmailTemplates).catch(console.error)
   }, [])
 
   // Pipeline tab management

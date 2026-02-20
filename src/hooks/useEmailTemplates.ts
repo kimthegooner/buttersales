@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react'
 import { EmailTemplate, EmailSettings } from '@/lib/types'
-import { loadEmailTemplates, saveEmailTemplates, loadEmailSettings, saveEmailSettings } from '@/lib/storage'
+import { apiGet, apiPost, apiPatch, apiDelete, apiPut } from '@/lib/api-client'
 
 export function useEmailTemplates() {
   const [templates, setTemplates] = useState<EmailTemplate[]>([])
@@ -10,35 +10,23 @@ export function useEmailTemplates() {
   const [loaded, setLoaded] = useState(false)
 
   useEffect(() => {
-    const stored = loadEmailTemplates()
-    if (stored.length > 0) {
-      setTemplates(stored)
-      setSettings(loadEmailSettings())
-      setLoaded(true)
-    } else {
-      fetch('/data/email-templates.json')
-        .then((r) => r.json())
-        .then((data) => {
-          const seed = data.templates || []
-          setTemplates(seed)
-          saveEmailTemplates(seed)
-        })
-        .catch(() => {})
-        .finally(() => {
-          setSettings(loadEmailSettings())
-          setLoaded(true)
-        })
-    }
+    Promise.all([
+      apiGet<EmailTemplate[]>('/api/email-templates'),
+      apiGet<EmailSettings>('/api/email-settings'),
+    ])
+      .then(([tpls, sets]) => {
+        setTemplates(tpls)
+        setSettings(sets)
+      })
+      .catch(console.error)
+      .finally(() => setLoaded(true))
   }, [])
-
-  useEffect(() => {
-    if (loaded) saveEmailTemplates(templates)
-  }, [templates, loaded])
 
   const addTemplate = (template: Omit<EmailTemplate, 'id' | 'createdAt' | 'updatedAt'>) => {
     const now = new Date().toISOString()
     const newTemplate: EmailTemplate = { ...template, id: crypto.randomUUID(), createdAt: now, updatedAt: now }
     setTemplates((prev) => [...prev, newTemplate])
+    apiPost('/api/email-templates', newTemplate).catch(console.error)
     return newTemplate
   }
 
@@ -46,15 +34,17 @@ export function useEmailTemplates() {
     setTemplates((prev) =>
       prev.map((t) => (t.id === id ? { ...t, ...updates, updatedAt: new Date().toISOString() } : t))
     )
+    apiPatch(`/api/email-templates/${id}`, updates).catch(console.error)
   }
 
   const deleteTemplate = (id: string) => {
     setTemplates((prev) => prev.filter((t) => t.id !== id))
+    apiDelete(`/api/email-templates/${id}`).catch(console.error)
   }
 
   const updateSettings = (newSettings: EmailSettings) => {
     setSettings(newSettings)
-    saveEmailSettings(newSettings)
+    apiPut('/api/email-settings', newSettings).catch(console.error)
   }
 
   return { templates, settings, loaded, addTemplate, updateTemplate, deleteTemplate, updateSettings }

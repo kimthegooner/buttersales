@@ -2,38 +2,24 @@
 
 import { useState, useEffect } from 'react'
 import { Contact } from '@/lib/types'
-import { loadContacts, saveContacts } from '@/lib/storage'
+import { apiGet, apiPost, apiPatch, apiDelete } from '@/lib/api-client'
 
 export function useContacts() {
   const [contacts, setContacts] = useState<Contact[]>([])
   const [loaded, setLoaded] = useState(false)
 
   useEffect(() => {
-    const stored = loadContacts()
-    if (stored.length > 0) {
-      setContacts(stored)
-      setLoaded(true)
-    } else {
-      fetch('/data/contacts.json')
-        .then((r) => r.json())
-        .then((data) => {
-          const seed = data.contacts || []
-          setContacts(seed)
-          saveContacts(seed)
-        })
-        .catch(() => {})
-        .finally(() => setLoaded(true))
-    }
+    apiGet<Contact[]>('/api/contacts')
+      .then(setContacts)
+      .catch(console.error)
+      .finally(() => setLoaded(true))
   }, [])
-
-  useEffect(() => {
-    if (loaded) saveContacts(contacts)
-  }, [contacts, loaded])
 
   const addContact = (contact: Omit<Contact, 'id' | 'createdAt' | 'updatedAt'>) => {
     const now = new Date().toISOString()
     const newContact: Contact = { ...contact, id: crypto.randomUUID(), createdAt: now, updatedAt: now }
     setContacts((prev) => [...prev, newContact])
+    apiPost('/api/contacts', newContact).catch(console.error)
     return newContact
   }
 
@@ -41,10 +27,12 @@ export function useContacts() {
     setContacts((prev) =>
       prev.map((c) => (c.id === id ? { ...c, ...updates, updatedAt: new Date().toISOString() } : c))
     )
+    apiPatch(`/api/contacts/${id}`, updates).catch(console.error)
   }
 
   const deleteContact = (id: string) => {
     setContacts((prev) => prev.filter((c) => c.id !== id))
+    apiDelete(`/api/contacts/${id}`).catch(console.error)
   }
 
   const linkDeal = (contactId: string, dealId: string) => {
@@ -53,7 +41,9 @@ export function useContacts() {
         if (c.id !== contactId) return c
         const dealIds = c.dealIds || []
         if (dealIds.includes(dealId)) return c
-        return { ...c, dealIds: [...dealIds, dealId], updatedAt: new Date().toISOString() }
+        const updated = { ...c, dealIds: [...dealIds, dealId], updatedAt: new Date().toISOString() }
+        apiPatch(`/api/contacts/${contactId}`, { dealIds: updated.dealIds }).catch(console.error)
+        return updated
       })
     )
   }
@@ -62,7 +52,9 @@ export function useContacts() {
     setContacts((prev) =>
       prev.map((c) => {
         if (c.id !== contactId) return c
-        return { ...c, dealIds: (c.dealIds || []).filter((id) => id !== dealId), updatedAt: new Date().toISOString() }
+        const newDealIds = (c.dealIds || []).filter((id) => id !== dealId)
+        apiPatch(`/api/contacts/${contactId}`, { dealIds: newDealIds }).catch(console.error)
+        return { ...c, dealIds: newDealIds, updatedAt: new Date().toISOString() }
       })
     )
   }

@@ -3,7 +3,7 @@
 import { useState, useMemo, useEffect } from 'react'
 import { Activity, ActivityType, Deal, ACTIVITY_TYPE_OPTIONS, getActivityLabel, getActivityColor } from '@/lib/types'
 import { useActivities } from '@/hooks/useActivities'
-import { loadDeals, loadEmailTemplates } from '@/lib/storage'
+import { apiGet } from '@/lib/api-client'
 import { EmailTemplate } from '@/lib/types'
 import ActivityModal, { ActivityTypeIcon } from '@/components/ActivityModal'
 
@@ -22,24 +22,8 @@ export default function ActivitiesPage() {
   const [allDeals, setAllDeals] = useState<Deal[]>([])
   const [emailTemplates, setEmailTemplates] = useState<EmailTemplate[]>([])
   useEffect(() => {
-    const stored = loadDeals()
-    if (stored.length > 0) {
-      setAllDeals(stored)
-    } else {
-      fetch('/data/deals.json')
-        .then((r) => r.json())
-        .then((data) => setAllDeals(data.deals || []))
-        .catch(() => {})
-    }
-    const storedTemplates = loadEmailTemplates()
-    if (storedTemplates.length > 0) {
-      setEmailTemplates(storedTemplates)
-    } else {
-      fetch('/data/email-templates.json')
-        .then((r) => r.json())
-        .then((data) => setEmailTemplates(data.templates || []))
-        .catch(() => {})
-    }
+    apiGet<Deal[]>('/api/deals').then(setAllDeals).catch(console.error)
+    apiGet<EmailTemplate[]>('/api/email-templates').then(setEmailTemplates).catch(console.error)
   }, [])
 
   const getDealName = (dealId: string) => {
