@@ -177,11 +177,15 @@ export default function SiteAnalyzerPage() {
     setSaving(true)
     try {
       const domain = analysis.url.replace(/https?:\/\//, '').replace(/\/.*$/, '')
+      const now = new Date().toISOString()
       const contact = await apiPost('/api/contacts', {
+        id: crypto.randomUUID(),
         name: domain,
         company: analysis.title || domain,
         notes: `사이트 분석기에서 생성\nURL: ${analysis.url}\n영업점수: ${analysis.salesScore}\n웹빌더: ${analysis.webBuilders.map((b) => BUILDER_LABELS[b] || b).join(', ') || '미탐지'}\n${analysis.notes || ''}`.trim(),
         tags: ['사이트분석', ...analysis.webBuilders.map((b) => BUILDER_LABELS[b] || b)],
+        createdAt: now,
+        updatedAt: now,
       })
       setShowContactModal(false)
       alert('연락처가 생성되었습니다!')
@@ -201,8 +205,10 @@ export default function SiteAnalyzerPage() {
       const domain = analysis.url.replace(/https?:\/\//, '').replace(/\/.*$/, '')
       const pipeline = pipelines.find((p) => p.id === pipelineId)
       const firstStage = pipeline?.stages?.[0]?.id || 'lead'
+      const now = new Date().toISOString()
 
       await apiPost('/api/deals', {
+        id: crypto.randomUUID(),
         pipelineId,
         title: `${analysis.title || domain} - 영업 기회`,
         companyName: analysis.title || domain,
@@ -213,6 +219,8 @@ export default function SiteAnalyzerPage() {
         notes: `사이트 분석기에서 생성\nURL: ${analysis.url}\n영업점수: ${analysis.salesScore}\n웹빌더: ${analysis.webBuilders.map((b) => BUILDER_LABELS[b] || b).join(', ') || '미탐지'}\n기회: ${analysis.opportunities.join(', ')}\n${analysis.notes || ''}`.trim(),
         tags: ['사이트분석', ...analysis.webBuilders.map((b) => BUILDER_LABELS[b] || b)],
         source: '사이트 분석기',
+        createdAt: now,
+        updatedAt: now,
       })
       setShowDealModal(false)
       alert('딜이 생성되었습니다!')
