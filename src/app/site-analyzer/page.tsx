@@ -83,9 +83,10 @@ export default function SiteAnalyzerPage() {
           status: 'error',
           errorMessage: data.error || `HTTP ${resp.status}`,
         }
-        // Save error result to DB too
+        // Save error result to DB too (omit temp id)
         try {
-          const saved = await apiPost<SiteAnalysis>('/api/site-analyses', errorResult)
+          const { id: _tempId, ...toSave } = errorResult
+          const saved = await apiPost<SiteAnalysis>('/api/site-analyses', toSave)
           setAnalyses((prev) => prev.map((a) => (a.id === tempId ? saved : a)))
           setActiveAnalysis(saved)
         } catch {
@@ -111,9 +112,10 @@ export default function SiteAnalyzerPage() {
         opportunities: data.opportunities,
       }
 
-      // Save to DB
+      // Save to DB (omit temp id so Supabase generates a UUID)
       try {
-        const saved = await apiPost<SiteAnalysis>('/api/site-analyses', result)
+        const { id: _tempId, ...toSave } = result
+        const saved = await apiPost<SiteAnalysis>('/api/site-analyses', toSave)
         setAnalyses((prev) => prev.map((a) => (a.id === tempId ? saved : a)))
         setActiveAnalysis(saved)
       } catch {
